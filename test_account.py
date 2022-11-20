@@ -1,55 +1,53 @@
-import unittest
-import account
+import pytest
+from account import *
 
-class TestAccount(unittest.TestCase):
-    
-    def test_deposit(self):
+def test_init():
+    t1 = Account('ex')
 
-        ex1 = account.Account('ex')
-        
-        self.assertTrue(ex1.deposit(100))
-        self.assertTrue(ex1.deposit(0.2))
-        self.assertFalse(ex1.deposit(0))
-        self.assertFalse(ex1.deposit(-1))
-        self.assertFalse(ex1.deposit(-2.2))
+    assert t1.get_balance() == 0
+    assert t1.get_name() == 'ex'
 
-    def test_withdraw(self):
+def test_deposit():
+    t1 = Account('ex')
+    assert t1.deposit(100) is True
+    assert t1.get_balance() == 100
+    assert t1.deposit(.1) is True
+    assert t1.get_balance() == pytest.approx(100.1, abs=0.001)
+    assert t1.deposit(0) is False
+    assert t1.get_balance() == pytest.approx(100.1, abs=0.001)
+    assert t1.deposit(-8) is False
+    assert t1.get_balance() == pytest.approx(100.1, abs=0.001)
 
-        ex2 = account.Account('ex')
-        
-        ex2.deposit(100.2)
-        
-        self.assertTrue(ex2.withdraw(100))
-        self.assertFalse(ex2.withdraw(100))
-        self.assertTrue(ex2.withdraw(.2))
-        self.assertFalse(ex2.withdraw(0))
-        self.assertFalse(ex2.withdraw(-1))
-        self.assertFalse(ex2.withdraw(-2.2))
+def test_withdraw():
+    t1 = Account('ex')
+    t1.deposit(100.5)
 
-    def test_get_balance(self):
+    assert t1.withdraw(100) is True
+    assert t1.get_balance() == pytest.approx(0.5, abs=0.001)
+    assert t1.withdraw(100) is False
+    assert t1.get_balance() == pytest.approx(0.5, abs=0.001)
+    assert t1.withdraw(.1) is True
+    assert t1.get_balance() == pytest.approx(0.4, abs=0.001)
+    assert t1.withdraw(0) is False
+    assert t1.get_balance() == pytest.approx(0.4, abs=0.001)
+    assert t1.withdraw(-1) is False
+    assert t1.get_balance() == pytest.approx(0.4, abs=0.001)
+    assert t1.withdraw(-2.2) is False
+    assert t1.get_balance() == pytest.approx(0.4, abs=0.001)
 
-        ex3 = account.Account('ex')
-        
-        self.assertEqual(ex3.get_balance(), 0)
-        
-        ex3.deposit(3)
-        
-        self.assertEqual(ex3.get_balance(), 3)
-        
-        ex3.deposit(.4)
-        
-        self.assertEqual(ex3.get_balance(), 3.4)
+def test_get_balance():
+    t1 = Account('ex')
+    assert t1.get_balance() == 0
+    t1.deposit(3)
+    assert t1.get_balance() == 3
+    t1.deposit(.4)
+    assert t1.get_balance() == pytest.approx(3.4, abs=0.001)
 
-    def test_get_name(self):
+def test_get_name():
+    t1 = Account('John Doe')
+    t2 = Account('@#%$@^')
+    t3 = Account('0')
 
-        ex4 = account.Account('John Doe')
-        ex5 = account.Account('!@#%^&')
-        ex6 = account.Account('0')
-        
-        self.assertEqual(ex4.get_name(), 'John Doe')
-        self.assertEqual(ex5.get_name(), '!@#%^&')
-        self.assertEqual(ex6.get_name(), '0')
-
-
-if __name__ == '__main__':
-    unittest.main()
+    assert t1.get_name() == 'John Doe'
+    assert t2.get_name() == '@#%$@^'
+    assert t3.get_name() == '0'

@@ -6,9 +6,9 @@ class Account():
     '''
     def __init__(self, name: str):
         '''
-        Constructor to create intial state of a account object.
+        Constructor to create intial state of an account object.
         
-        :param name: An account's username
+        :param name: Account's name
         '''
         self.__account_name = name
         self.__account_balance = 0
@@ -51,6 +51,6 @@ class Account():
         '''
         Method to access an account's username.
 
-        :return: An account's username
+        :return: An account's name
         '''
         return self.__account_name
